@@ -1,5 +1,6 @@
 *.iml
 .gradle
+.gradle-user-home/
 local.properties
 .DS_Store
 /build
@@ -18,3 +19,4 @@ package-lock.json
 .kotlin/
 .cxx
 .vscode
+build-alienread*.log

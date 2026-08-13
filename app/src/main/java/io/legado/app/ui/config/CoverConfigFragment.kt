@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.preference.Preference
 import io.legado.app.R
+import io.legado.app.constant.EventBus
 import io.legado.app.constant.PreferKey
 import io.legado.app.lib.dialogs.selector
 import io.legado.app.lib.prefs.SwitchPreference
@@ -20,6 +21,7 @@ import io.legado.app.utils.externalFiles
 import io.legado.app.utils.getPrefBoolean
 import io.legado.app.utils.getPrefString
 import io.legado.app.utils.inputStream
+import io.legado.app.utils.postEvent
 import io.legado.app.utils.putPrefString
 import io.legado.app.utils.readUri
 import io.legado.app.utils.removePref
@@ -92,6 +94,10 @@ class CoverConfigFragment : PreferenceFragment(),
             PreferKey.coverShowAuthor,
             PreferKey.coverShowAuthorN -> {
                 BookCover.upDefaultCover()
+            }
+
+            PreferKey.blurBookCover -> {
+                postEvent(EventBus.BOOKSHELF_REFRESH, "")
             }
         }
     }

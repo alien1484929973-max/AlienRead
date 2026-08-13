@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--App-->
-    <string name="app_name">Legado</string>
-    <string name="app_name_a">Legado·A</string>
-    <string name="app_name_s" translatable="false">LegadoPlus</string>
-    <string name="receiving_shared_label">Legado·search</string>
+    <string name="app_name">AlienRead</string>
+    <string name="app_name_a">AlienRead</string>
+    <string name="app_name_s" translatable="false">AlienRead</string>
+    <string name="receiving_shared_label">AlienRead search</string>
     <string name="tip_perm_request_storage">Legado needs storage access to find and read books. please go "App Settings" to allow "Storage permission".</string>
 
     <!--Other-->
@@ -912,6 +912,8 @@
     <string name="summary">summary</string>
     <string name="cover_config">cover config</string>
     <string name="cover_config_summary">Generic Cover Rules and Default Cover Style</string>
+    <string name="blur_book_cover">Blur book covers</string>
+    <string name="blur_book_cover_summary">Blur covers throughout the app to reduce visible cover details</string>
     <string name="cover_show_name">show name</string>
     <string name="cover_show_name_summary">Book title shown on cover</string>
     <string name="cover_show_author">show author</string>
@@ -1300,11 +1302,11 @@
     <string name="video_setting">视频设置</string>
     <string name="video_setting_summary">自动播放、全屏播放等配置</string>
     <string name="history">历史记录</string>
-    <string name="app_name_sigma">阅读Sigma</string>
-    <string name="about_description_sigma">\u3000\u3000阅读Sigma继承自legado，旨在原版基础上完善和增加功能，欢迎您的加入。</string>
+    <string name="app_name_sigma">AlienRead</string>
+    <string name="about_description_sigma">\u3000\u3000外星阅读基于 Legado 与阅读 Sigma 开源项目构建，用于个人本地阅读。</string>
     <string name="contributors_summary_sigma">gedoor、Luoyacheng、Horis和 Xwite 等，详情请在 GitHub 中查看</string>
     <string name="app_share_description_sigma">
-        阅读 Sigma 下载地址：\nhttps://github.com/Luoyacheng/legado-E/releases
+        AlienRead 下载地址：\nhttps://github.com/alien1484929973-max/AlienRead/releases
     </string>
     <string name="sure_cache_book">是否确认开始缓存？</string>
     <string name="non_printable_set">不可视字符设定</string>

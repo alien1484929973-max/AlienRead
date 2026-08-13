@@ -1,9 +1,9 @@
 <div align="center">
-<img width="125" height="125" src="https://gitee.com/lyc486/legado/raw/main/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="legado"/>
+<img width="125" height="125" src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="AlienRead"/>
 <br>
-阅读Sigma
+AlienRead / 外星阅读
 <br>
-阅读Sigma继承自<a href="https://github.com/gedoor/legado" target="_blank">Legado</a>，延续开源阅读项目，在其基础上新增更多功能。
+AlienRead 基于 <a href="https://github.com/Luoyacheng/legado-E" target="_blank">阅读 Sigma</a> 与 <a href="https://github.com/gedoor/legado" target="_blank">Legado</a> 开源项目构建，用于个人本地阅读与功能定制。
 </div>
 
 ## 版本说明

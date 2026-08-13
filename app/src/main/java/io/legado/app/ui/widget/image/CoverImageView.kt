@@ -14,13 +14,16 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
+import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import io.legado.app.constant.AppPattern
 import io.legado.app.help.config.AppConfig
+import io.legado.app.help.glide.BlurTransformation
 import io.legado.app.help.glide.ImageLoader
 import io.legado.app.help.glide.OkHttpModelLoader
 import io.legado.app.lib.theme.accentColor
@@ -68,6 +71,14 @@ class CoverImageView @JvmOverloads constructor(
     private var authorHeight = 0f
     private val drawBookName = BookCover.drawBookName
     private val drawBookAuthor by lazy { BookCover.drawBookAuthor }
+
+    private fun RequestBuilder<Drawable>.applyCoverEffect(): RequestBuilder<Drawable> {
+        return if (AppConfig.blurBookCover) {
+            transform(BlurTransformation(25), CenterCrop())
+        } else {
+            centerCrop()
+        }
+    }
 
     override fun setLayoutParams(params: ViewGroup.LayoutParams?) {
         if (params != null) {
@@ -300,7 +311,7 @@ class CoverImageView @JvmOverloads constructor(
         this.bitmapPath = path
         if (AppConfig.useDefaultCover) {
             ImageLoader.load(context, BookCover.defaultDrawable)
-                .centerCrop()
+                .applyCoverEffect()
                 .into(this)
         } else {
             if (drawBookName && currentName != null) {
@@ -349,7 +360,7 @@ class CoverImageView @JvmOverloads constructor(
                 })
             }
             builder
-                .centerCrop()
+                .applyCoverEffect()
                 .into(this)
         }
     }
