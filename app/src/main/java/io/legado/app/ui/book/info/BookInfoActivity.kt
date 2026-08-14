@@ -49,6 +49,7 @@ import io.legado.app.help.book.isVideo
 import io.legado.app.help.book.isWebFile
 import io.legado.app.help.book.removeType
 import io.legado.app.help.config.AppConfig
+import io.legado.app.help.config.setBookTitle
 import io.legado.app.help.config.LocalConfig
 import io.legado.app.help.webView.PooledWebView
 import io.legado.app.help.webView.WebJsExtensions
@@ -483,7 +484,7 @@ class BookInfoActivity :
 
     private fun showBook(book: Book) = binding.run {
         showCover(book)
-        tvName.text = book.name
+        tvName.setBookTitle(book.name, book.origin)
         tvAuthor.text = getString(R.string.author_show, book.getRealAuthor())
         tvOrigin.text = getString(R.string.origin_show, book.originName)
         tvLasted.text = getString(R.string.lasted_show, book.latestChapterTitle)

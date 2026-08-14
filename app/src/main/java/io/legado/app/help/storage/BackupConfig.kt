@@ -56,7 +56,6 @@ object BackupConfig {
         PreferKey.backupPath,
         PreferKey.defaultBookTreeUri,
         PreferKey.webDavDeviceName,
-        PreferKey.launcherIcon,
         PreferKey.bitmapCacheSize,
         PreferKey.webServiceWakeLock,
         PreferKey.readAloudWakeLock,
@@ -79,7 +78,9 @@ object BackupConfig {
         PreferKey.clickActionMR,
         PreferKey.clickActionBL,
         PreferKey.clickActionBC,
-        PreferKey.clickActionBR
+        PreferKey.clickActionBR,
+        PreferKey.mangaDownloadDelayMin,
+        PreferKey.mangaDownloadDelayMax
     )
 
     private val themePrefKeys = arrayOf(
@@ -105,7 +106,10 @@ object BackupConfig {
         PreferKey.coverShowName,
         PreferKey.coverShowAuthor,
         PreferKey.coverShowNameN,
-        PreferKey.coverShowAuthorN
+        PreferKey.coverShowAuthorN,
+        PreferKey.coverBlurRadius,
+        PreferKey.titleBlurRadius,
+        PreferKey.sourceGroupBlurRules
     )
 
     fun keyIsNotIgnore(key: String): Boolean {

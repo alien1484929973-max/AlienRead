@@ -23,6 +23,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import io.legado.app.constant.AppPattern
 import io.legado.app.help.config.AppConfig
+import io.legado.app.help.config.PrivacyBlurConfig
 import io.legado.app.help.glide.BlurTransformation
 import io.legado.app.help.glide.ImageLoader
 import io.legado.app.help.glide.OkHttpModelLoader
@@ -72,9 +73,10 @@ class CoverImageView @JvmOverloads constructor(
     private val drawBookName = BookCover.drawBookName
     private val drawBookAuthor by lazy { BookCover.drawBookAuthor }
 
-    private fun RequestBuilder<Drawable>.applyCoverEffect(): RequestBuilder<Drawable> {
-        return if (AppConfig.blurBookCover) {
-            transform(BlurTransformation(25), CenterCrop())
+    private fun RequestBuilder<Drawable>.applyCoverEffect(sourceOrigin: String?): RequestBuilder<Drawable> {
+        val radius = PrivacyBlurConfig.coverRadius(sourceOrigin)
+        return if (radius > 0) {
+            transform(BlurTransformation(radius), CenterCrop())
         } else {
             centerCrop()
         }
@@ -311,7 +313,7 @@ class CoverImageView @JvmOverloads constructor(
         this.bitmapPath = path
         if (AppConfig.useDefaultCover) {
             ImageLoader.load(context, BookCover.defaultDrawable)
-                .applyCoverEffect()
+                .applyCoverEffect(sourceOrigin)
                 .into(this)
         } else {
             if (drawBookName && currentName != null) {
@@ -360,7 +362,7 @@ class CoverImageView @JvmOverloads constructor(
                 })
             }
             builder
-                .applyCoverEffect()
+                .applyCoverEffect(sourceOrigin)
                 .into(this)
         }
     }

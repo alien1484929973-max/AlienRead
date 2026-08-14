@@ -25,11 +25,36 @@
         app:allowDividerBelow="false"
         app:iconSpaceReserved="false" />
 
-    <io.legado.app.lib.prefs.SwitchPreference
-        android:defaultValue="false"
-        android:key="blurBookCover"
+    <io.legado.app.lib.prefs.SeekBarPreference
+        android:clickable="false"
+        android:defaultValue="0"
+        android:key="coverBlurRadius"
         android:summary="@string/blur_book_cover_summary"
         android:title="@string/blur_book_cover"
+        app:MaxValue="25"
+        app:MinValue="0"
+        app:allowDividerAbove="false"
+        app:allowDividerBelow="false"
+        app:iconSpaceReserved="false"
+        app:selectable="false" />
+
+    <io.legado.app.lib.prefs.SeekBarPreference
+        android:clickable="false"
+        android:defaultValue="0"
+        android:key="titleBlurRadius"
+        android:summary="@string/blur_book_title_summary"
+        android:title="@string/blur_book_title"
+        app:MaxValue="25"
+        app:MinValue="0"
+        app:allowDividerAbove="false"
+        app:allowDividerBelow="false"
+        app:iconSpaceReserved="false"
+        app:selectable="false" />
+
+    <io.legado.app.lib.prefs.Preference
+        android:key="sourceGroupBlurRules"
+        android:summary="@string/source_group_blur_summary"
+        android:title="@string/source_group_blur"
         app:allowDividerAbove="false"
         app:allowDividerBelow="false"
         app:iconSpaceReserved="false" />

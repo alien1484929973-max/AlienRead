@@ -11,6 +11,7 @@ import io.legado.app.base.adapter.ItemViewHolder
 import io.legado.app.data.entities.SearchBook
 import io.legado.app.databinding.ItemSearchBinding
 import io.legado.app.help.config.AppConfig
+import io.legado.app.help.config.setBookTitle
 import io.legado.app.utils.gone
 import io.legado.app.utils.visible
 
@@ -81,7 +82,7 @@ class SearchAdapter(context: Context, val callBack: CallBack) :
 
     private fun bind(binding: ItemSearchBinding, searchBook: SearchBook) {
         binding.run {
-            tvName.text = searchBook.name
+            tvName.setBookTitle(searchBook.name, searchBook.origin)
             tvAuthor.text = context.getString(R.string.author_show, searchBook.author)
             ivInBookshelf.isVisible = callBack.isInBookshelf(searchBook)
             bvOriginCount.setBadgeCount(searchBook.origins.size)

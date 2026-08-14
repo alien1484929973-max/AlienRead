@@ -14,6 +14,7 @@ import io.legado.app.data.entities.BookGroup
 import io.legado.app.databinding.ItemArrangeBookBinding
 import io.legado.app.help.book.isLocal
 import io.legado.app.help.config.AppConfig
+import io.legado.app.help.config.setBookTitle
 import io.legado.app.lib.theme.backgroundColor
 import io.legado.app.ui.widget.recycler.DragSelectTouchHelper
 import io.legado.app.ui.widget.recycler.ItemTouchCallback
@@ -50,7 +51,7 @@ class BookAdapter(context: Context, val callBack: CallBack) :
     ) {
         binding.apply {
             root.setBackgroundColor(context.backgroundColor)
-            tvName.text = item.name
+            tvName.setBookTitle(item.name, item.origin)
             tvAuthor.text = item.author
             tvAuthor.visibility = if (item.author.isEmpty()) View.GONE else View.VISIBLE
             tvGroupS.text = getGroupName(item.group)

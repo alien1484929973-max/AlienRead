@@ -25,6 +25,6 @@ class BlurTransformation(
     }
 
     override fun updateDiskCacheKey(messageDigest: MessageDigest) {
-        messageDigest.update("blur transformation".toByteArray())
+        messageDigest.update("blur transformation:$radius".toByteArray())
     }
 }

@@ -9,19 +9,24 @@ import androidx.preference.Preference
 import io.legado.app.R
 import io.legado.app.constant.EventBus
 import io.legado.app.constant.PreferKey
+import io.legado.app.data.appDb
+import io.legado.app.help.config.PrivacyBlurConfig
 import io.legado.app.lib.dialogs.selector
 import io.legado.app.lib.prefs.SwitchPreference
 import io.legado.app.lib.prefs.fragment.PreferenceFragment
 import io.legado.app.lib.theme.primaryColor
 import io.legado.app.model.BookCover
 import io.legado.app.ui.file.HandleFileContract
+import io.legado.app.ui.widget.number.NumberPickerDialog
 import io.legado.app.utils.FileUtils
 import io.legado.app.utils.MD5Utils
+import io.legado.app.utils.defaultSharedPreferences
 import io.legado.app.utils.externalFiles
 import io.legado.app.utils.getPrefBoolean
 import io.legado.app.utils.getPrefString
 import io.legado.app.utils.inputStream
 import io.legado.app.utils.postEvent
+import io.legado.app.utils.putPrefInt
 import io.legado.app.utils.putPrefString
 import io.legado.app.utils.readUri
 import io.legado.app.utils.removePref
@@ -46,6 +51,11 @@ class CoverConfigFragment : PreferenceFragment(),
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        if (!requireContext().defaultSharedPreferences.contains(PreferKey.coverBlurRadius)
+            && getPrefBoolean(PreferKey.blurBookCover)
+        ) {
+            putPrefInt(PreferKey.coverBlurRadius, 25)
+        }
         addPreferencesFromResource(R.xml.pref_config_cover)
         upPreferenceSummary(PreferKey.defaultCover, getPrefString(PreferKey.defaultCover))
         upPreferenceSummary(PreferKey.defaultCoverDark, getPrefString(PreferKey.defaultCoverDark))
@@ -53,6 +63,7 @@ class CoverConfigFragment : PreferenceFragment(),
             ?.isEnabled = getPrefBoolean(PreferKey.coverShowName)
         findPreference<SwitchPreference>(PreferKey.coverShowAuthorN)
             ?.isEnabled = getPrefBoolean(PreferKey.coverShowNameN)
+        upGroupBlurSummary()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -96,8 +107,11 @@ class CoverConfigFragment : PreferenceFragment(),
                 BookCover.upDefaultCover()
             }
 
-            PreferKey.blurBookCover -> {
+            PreferKey.coverBlurRadius,
+            PreferKey.titleBlurRadius,
+            PreferKey.sourceGroupBlurRules -> {
                 postEvent(EventBus.BOOKSHELF_REFRESH, "")
+                upGroupBlurSummary()
             }
         }
     }
@@ -106,6 +120,7 @@ class CoverConfigFragment : PreferenceFragment(),
     override fun onPreferenceTreeClick(preference: Preference): Boolean {
         when (preference.key) {
             "coverRule" -> showDialogFragment(CoverRuleConfigDialog())
+            PreferKey.sourceGroupBlurRules -> selectBlurGroup()
             PreferKey.defaultCover ->
                 if (getPrefString(preference.key).isNullOrEmpty()) {
                     selectImage.launch {
@@ -171,6 +186,68 @@ class CoverConfigFragment : PreferenceFragment(),
 
             else -> preference.summary = value
         }
+    }
+
+    private fun selectBlurGroup() {
+        val groups = (appDb.bookSourceDao.allGroups() + PrivacyBlurConfig.configuredGroups)
+            .distinct()
+        if (groups.isEmpty()) {
+            toastOnUi(R.string.no_source_group)
+            return
+        }
+        requireContext().selector(R.string.source_group_blur, groups) { _, group, _ ->
+            showGroupBlurMenu(group)
+        }
+    }
+
+    private fun showGroupBlurMenu(group: String) {
+        val savedRule = PrivacyBlurConfig.getGroupRule(group)
+        val rule = savedRule ?: PrivacyBlurConfig.Rule(
+            PrivacyBlurConfig.globalCoverRadius,
+            PrivacyBlurConfig.globalTitleRadius
+        )
+        val items = mutableListOf(
+            getString(R.string.group_cover_blur_value, rule.cover),
+            getString(R.string.group_title_blur_value, rule.title)
+        )
+        if (savedRule != null) items.add(getString(R.string.delete_group_blur_rule))
+        requireContext().selector(group, items) { _, index ->
+            when (index) {
+                0 -> selectGroupBlurRadius(group, rule, true)
+                1 -> selectGroupBlurRadius(group, rule, false)
+                else -> {
+                    PrivacyBlurConfig.removeGroupRule(group)
+                    postEvent(EventBus.BOOKSHELF_REFRESH, "")
+                    upGroupBlurSummary()
+                }
+            }
+        }
+    }
+
+    private fun selectGroupBlurRadius(
+        group: String,
+        rule: PrivacyBlurConfig.Rule,
+        cover: Boolean
+    ) {
+        NumberPickerDialog(requireContext())
+            .setTitle(getString(if (cover) R.string.blur_book_cover else R.string.blur_book_title))
+            .setMinValue(0)
+            .setMaxValue(25)
+            .setValue(if (cover) rule.cover else rule.title)
+            .show { value ->
+                PrivacyBlurConfig.setGroupRule(
+                    group,
+                    if (cover) value else rule.cover,
+                    if (cover) rule.title else value
+                )
+                postEvent(EventBus.BOOKSHELF_REFRESH, "")
+                upGroupBlurSummary()
+            }
+    }
+
+    private fun upGroupBlurSummary() {
+        findPreference<Preference>(PreferKey.sourceGroupBlurRules)?.summary =
+            getString(R.string.source_group_blur_summary, PrivacyBlurConfig.configuredGroups.size)
     }
 
     private fun setCoverFromUri(preferenceKey: String, uri: Uri) {

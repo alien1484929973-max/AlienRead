@@ -12,6 +12,7 @@ import io.legado.app.databinding.ItemBookshelfGridGroup2Binding
 import io.legado.app.databinding.ItemBookshelfGridGroupBinding
 import io.legado.app.help.book.isLocal
 import io.legado.app.help.config.AppConfig
+import io.legado.app.help.config.setBookTitle
 import io.legado.app.utils.gone
 import io.legado.app.utils.invisible
 import io.legado.app.utils.visible
@@ -78,7 +79,7 @@ class BooksAdapterGrid(context: Context, callBack: CallBack) :
                 tvName.gone()
             } else {
                 tvName.visible()
-                tvName.text = item.name
+                tvName.setBookTitle(item.name, item.origin)
             }
             ivCover.load(item, false)
             upRefresh(this, item)
@@ -92,7 +93,7 @@ class BooksAdapterGrid(context: Context, callBack: CallBack) :
                     val bundle = payloads[i] as Bundle
                     bundle.keySet().forEach {
                         when (it) {
-                            "name" -> tvName.text = item.name
+                            "name" -> tvName.setBookTitle(item.name, item.origin)
                             "cover" -> ivCover.load(
                                 item,
                                 false
@@ -135,7 +136,7 @@ class BooksAdapterGrid(context: Context, callBack: CallBack) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun onBind(item: Book, position: Int) = binding.run {
-            tvName.text = item.name
+            tvName.setBookTitle(item.name, item.origin)
             ivCover.load(item, false)
             upRefresh(this, item)
         }
@@ -148,7 +149,7 @@ class BooksAdapterGrid(context: Context, callBack: CallBack) :
                     val bundle = payloads[i] as Bundle
                     bundle.keySet().forEach {
                         when (it) {
-                            "name" -> tvName.text = item.name
+                            "name" -> tvName.setBookTitle(item.name, item.origin)
                             "cover" -> ivCover.load(
                                 item,
                                 false

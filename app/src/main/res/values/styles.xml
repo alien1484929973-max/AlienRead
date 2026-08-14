@@ -18,9 +18,11 @@
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
-    <!-- Welcome主题 -->
     <style name="AppTheme.Welcome" parent="Base.AppTheme">
         <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowAnimationStyle">@null</item>
     </style>
 
     <!-- Base application theme. -->

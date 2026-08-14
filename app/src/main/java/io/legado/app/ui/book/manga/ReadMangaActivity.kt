@@ -501,6 +501,26 @@ class ReadMangaActivity : VMBaseActivity<ActivityMangaBinding, ReadMangaViewMode
                 }
             }
 
+            R.id.menu_manga_download_delay -> {
+                showNumberPickerDialog(
+                    0,
+                    getString(R.string.manga_download_delay_min),
+                    AppConfig.mangaDownloadDelayMin,
+                    60
+                ) { min ->
+                    showNumberPickerDialog(
+                        min,
+                        getString(R.string.manga_download_delay_max),
+                        AppConfig.mangaDownloadDelayMax.coerceAtLeast(min),
+                        60
+                    ) { max ->
+                        AppConfig.mangaDownloadDelayMin = min
+                        AppConfig.mangaDownloadDelayMax = max
+                        item.title = getString(R.string.manga_download_delay_value, min, max)
+                    }
+                }
+            }
+
             R.id.menu_disable_manga_scale -> {
                 item.isChecked = !item.isChecked
                 AppConfig.disableMangaScale = item.isChecked
@@ -693,6 +713,12 @@ class ReadMangaActivity : VMBaseActivity<ActivityMangaBinding, ReadMangaViewMode
         this.mMenu = menu
         menu.findItem(R.id.menu_pre_manga_number).title =
             getString(R.string.pre_download_m, AppConfig.mangaPreDownloadNum)
+        menu.findItem(R.id.menu_manga_download_delay).title =
+            getString(
+                R.string.manga_download_delay_value,
+                AppConfig.mangaDownloadDelayMin,
+                AppConfig.mangaDownloadDelayMax
+            )
         menu.findItem(R.id.menu_disable_manga_scale).isChecked = AppConfig.disableMangaScale
         menu.findItem(R.id.menu_disable_click_scroll).isChecked = AppConfig.disableClickScroll
         menu.findItem(R.id.menu_manga_auto_page_speed).title =
@@ -766,11 +792,12 @@ class ReadMangaActivity : VMBaseActivity<ActivityMangaBinding, ReadMangaViewMode
         min: Int,
         title: String,
         initValue: Int,
+        max: Int = 9999,
         callback: (Int) -> Unit,
     ) {
         NumberPickerDialog(this)
             .setTitle(title)
-            .setMaxValue(9999)
+            .setMaxValue(max)
             .setMinValue(min)
             .setValue(initValue)
             .show {

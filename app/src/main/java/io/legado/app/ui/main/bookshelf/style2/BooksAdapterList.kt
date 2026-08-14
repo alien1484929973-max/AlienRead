@@ -11,6 +11,7 @@ import io.legado.app.databinding.ItemBookshelfListBinding
 import io.legado.app.databinding.ItemBookshelfListGroupBinding
 import io.legado.app.help.book.isLocal
 import io.legado.app.help.config.AppConfig
+import io.legado.app.help.config.setBookTitle
 import io.legado.app.utils.gone
 import io.legado.app.utils.invisible
 import io.legado.app.utils.visible
@@ -58,7 +59,7 @@ class BooksAdapterList(context: Context, callBack: CallBack) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun onBind(item: Book, position: Int) = binding.run {
-            tvName.text = item.name
+            tvName.setBookTitle(item.name, item.origin)
             tvAuthor.text = item.author
             tvRead.text = item.durChapterTitle
             tvLast.text = item.latestChapterTitle
@@ -78,7 +79,7 @@ class BooksAdapterList(context: Context, callBack: CallBack) :
                     val bundle = payloads[i] as Bundle
                     bundle.keySet().forEach {
                         when (it) {
-                            "name" -> tvName.text = item.name
+                            "name" -> tvName.setBookTitle(item.name, item.origin)
                             "author" -> tvAuthor.text = item.author
                             "dur" -> tvRead.text = item.durChapterTitle
                             "last" -> tvLast.text = item.latestChapterTitle
@@ -127,7 +128,7 @@ class BooksAdapterList(context: Context, callBack: CallBack) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun onBind(item: Book, position: Int) = binding.run {
-            tvName.text = item.name
+            tvName.setBookTitle(item.name, item.origin)
             tvAuthor.text = item.author
             tvRead.text = item.durChapterTitle
             tvLast.text = item.latestChapterTitle
@@ -146,7 +147,7 @@ class BooksAdapterList(context: Context, callBack: CallBack) :
                     val bundle = payloads[i] as Bundle
                     bundle.keySet().forEach {
                         when (it) {
-                            "name" -> tvName.text = item.name
+                            "name" -> tvName.setBookTitle(item.name, item.origin)
                             "author" -> tvAuthor.text = item.author
                             "dur" -> tvRead.text = item.durChapterTitle
                             "last" -> tvLast.text = item.latestChapterTitle

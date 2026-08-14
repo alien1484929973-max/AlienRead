@@ -32,94 +32,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.Light"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning,UnusedAttribute">
-        <!-- 主入口 -->
+        <!-- 无界面启动入口，避免重复显示欢迎页 -->
         <activity
             android:name=".ui.welcome.WelcomeActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <!-- 图标1 -->
-        <activity
-            android:name=".ui.welcome.Launcher1"
-            android:enabled="false"
             android:exported="true"
-            android:icon="@mipmap/ic_launcher">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <!-- 图标2 -->
-        <activity
-            android:name=".ui.welcome.Launcher2"
-            android:enabled="false"
-            android:exported="true"
-            android:icon="@mipmap/ic_launcher">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <!-- 图标3 -->
-        <activity
-            android:name=".ui.welcome.Launcher3"
-            android:enabled="false"
-            android:exported="true"
-            android:icon="@mipmap/ic_launcher">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <!-- 图标4 -->
-        <activity
-            android:name=".ui.welcome.Launcher4"
-            android:enabled="false"
-            android:exported="true"
-            android:icon="@mipmap/ic_launcher">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <!-- 图标5 -->
-        <activity
-            android:name=".ui.welcome.Launcher5"
-            android:enabled="false"
-            android:exported="true"
-            android:icon="@mipmap/ic_launcher">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <!-- 图标6 -->
-        <activity
-            android:name=".ui.welcome.Launcher6"
-            android:enabled="false"
-            android:exported="true"
-            android:icon="@mipmap/ic_launcher">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <!-- 图标7 -->
-        <activity
-            android:name=".ui.welcome.Launcher7"
-            android:enabled="false"
-            android:exported="true"
-            android:icon="@mipmap/ic_launcher">
+            android:theme="@style/AppTheme.Welcome">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

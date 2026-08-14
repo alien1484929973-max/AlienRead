@@ -11,7 +11,7 @@ on:
 jobs:
   prepare:
     runs-on: ubuntu-latest
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/master'
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     outputs:
       version: ${{ steps.set-ver.outputs.version }}
       play: ${{ steps.check.outputs.play }}
@@ -83,19 +83,19 @@ jobs:
       - name: Upload App To Artifact
         uses: actions/upload-artifact@v7
         with:
-          name: legado_${{ env.product }}
+          name: AlienRead_${{ env.product }}
           path: ${{ github.workspace }}/apk/*.apk
 
       - name: Release
         if: ${{ env.product == 'app' }}
         uses: softprops/action-gh-release@v2
         with:
-          name: legado_app_${{ env.VERSION }}
+          name: AlienRead_${{ env.VERSION }}
           tag_name: ${{ env.VERSION }}
           body_path: ${{ github.workspace }}/CHANGELOG.md
           draft: false
           prerelease: false
-          files: ${{ github.workspace }}/apk/legado_app_*.apk
+          files: ${{ github.workspace }}/apk/AlienRead_app_*.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       

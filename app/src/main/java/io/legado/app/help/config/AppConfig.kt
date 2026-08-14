@@ -46,7 +46,6 @@ object AppConfig : SharedPreferences.OnSharedPreferenceChangeListener {
     var clickActionBR = appCtx.getPrefInt(PreferKey.clickActionBR, 1)
     var themeMode = appCtx.getPrefString(PreferKey.themeMode, "0")
     var useDefaultCover = appCtx.getPrefBoolean(PreferKey.useDefaultCover, false)
-    var blurBookCover = appCtx.getPrefBoolean(PreferKey.blurBookCover, false)
     var optimizeRender = CanvasRecorderFactory.isSupport
             && appCtx.getPrefBoolean(PreferKey.optimizeRender, false)
     var recordLog = appCtx.getPrefBoolean(PreferKey.recordLog)
@@ -123,8 +122,7 @@ object AppConfig : SharedPreferences.OnSharedPreferenceChangeListener {
             PreferKey.useDefaultCover -> useDefaultCover =
                 appCtx.getPrefBoolean(PreferKey.useDefaultCover, false)
 
-            PreferKey.blurBookCover -> blurBookCover =
-                appCtx.getPrefBoolean(PreferKey.blurBookCover, false)
+            PreferKey.sourceGroupBlurRules -> PrivacyBlurConfig.reload()
 
             PreferKey.optimizeRender -> optimizeRender = CanvasRecorderFactory.isSupport
                     && appCtx.getPrefBoolean(PreferKey.optimizeRender, false)
@@ -721,6 +719,18 @@ object AppConfig : SharedPreferences.OnSharedPreferenceChangeListener {
         get() = appCtx.getPrefInt(PreferKey.mangaPreDownloadNum, 10)
         set(value) {
             appCtx.putPrefInt(PreferKey.mangaPreDownloadNum, value)
+        }
+
+    var mangaDownloadDelayMin
+        get() = appCtx.getPrefInt(PreferKey.mangaDownloadDelayMin, 0)
+        set(value) {
+            appCtx.putPrefInt(PreferKey.mangaDownloadDelayMin, value.coerceIn(0, 60))
+        }
+
+    var mangaDownloadDelayMax
+        get() = appCtx.getPrefInt(PreferKey.mangaDownloadDelayMax, 0)
+        set(value) {
+            appCtx.putPrefInt(PreferKey.mangaDownloadDelayMax, value.coerceIn(0, 60))
         }
 
     //点击翻页
