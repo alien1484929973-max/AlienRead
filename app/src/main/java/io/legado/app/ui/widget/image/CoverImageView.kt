@@ -334,7 +334,7 @@ class CoverImageView @JvmOverloads constructor(
                 ImageLoader.load(context, path)//Glide自动识别http://,content://和file://
             }
             builder = builder.apply(options)
-                .placeholder(BookCover.defaultDrawable)
+                .placeholder(drawable ?: BookCover.defaultDrawable)
                 .error(BookCover.defaultDrawable)
                 .listener(glideListener)
             if (onLoadFinish != null) {

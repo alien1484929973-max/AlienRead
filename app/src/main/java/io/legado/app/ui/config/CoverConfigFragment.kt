@@ -232,7 +232,10 @@ class CoverConfigFragment : PreferenceFragment(),
         NumberPickerDialog(requireContext())
             .setTitle(getString(if (cover) R.string.blur_book_cover else R.string.blur_book_title))
             .setMinValue(0)
-            .setMaxValue(25)
+            .setMaxValue(
+                if (cover) PrivacyBlurConfig.COVER_MAX_RADIUS
+                else PrivacyBlurConfig.TEXT_MAX_RADIUS
+            )
             .setValue(if (cover) rule.cover else rule.title)
             .show { value ->
                 PrivacyBlurConfig.setGroupRule(

@@ -10,6 +10,8 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
+import android.view.WindowInsets
+import android.view.WindowInsetsController
 import io.legado.app.ui.widget.text.ScrollTextView
 import android.view.textclassifier.TextClassifier
 import android.webkit.WebResourceRequest
@@ -236,6 +238,17 @@ class BookInfoActivity :
         })
     }
 
+    override fun setupSystemBar() {
+        super.setupSystemBar()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window.insetsController?.apply {
+                hide(WindowInsets.Type.navigationBars())
+                systemBarsBehavior =
+                    WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            }
+        }
+    }
+
     @SuppressLint("PrivateResource")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         binding.titleBar.setBackgroundResource(R.color.transparent)
@@ -247,7 +260,7 @@ class BookInfoActivity :
         binding.flAction.applyNavigationBarPadding()
         binding.tvShelf.setTextColor(getPrimaryTextColor(ColorUtils.isColorLight(bottomBackground)))
         binding.tvToc.text = getString(R.string.toc_s, getString(R.string.loading))
-        binding.fabPrivacyReveal.holdToRevealPrivacy {
+        binding.fabPrivacyReveal.holdToRevealPrivacy("privacyReveal.bookInfo") {
             viewModel.getBook()?.let(::upPrivacyBlur)
         }
         viewModel.bookData.observe(this) { showBook(it) }
@@ -489,6 +502,7 @@ class BookInfoActivity :
     }
 
     private fun showBook(book: Book) = binding.run {
+        showCover(book)
         tvName.text = book.name
         tvAuthor.text = getString(R.string.author_show, book.getRealAuthor())
         tvOrigin.text = getString(R.string.origin_show, book.originName)
@@ -504,13 +518,13 @@ class BookInfoActivity :
         upTvBookshelf()
         upKinds(book)
         upGroup(book.group)
-        upPrivacyBlur(book)
+        upPrivacyBlur(book, refreshCover = false)
     }
 
-    private fun upPrivacyBlur(book: Book) = binding.run {
+    private fun upPrivacyBlur(book: Book, refreshCover: Boolean = true) = binding.run {
         fabPrivacyReveal.isVisible = PrivacyBlurConfig.hasBlur(book.origin)
         llInfo.applyBookInfoBlur(book.origin)
-        showCover(book)
+        if (refreshCover) showCover(book, refreshBackground = false)
     }
 
     inner class CustomWebViewClient : WebViewClient() {
@@ -708,7 +722,11 @@ class BookInfoActivity :
         }
     }
 
-    private fun showCover(book: Book) {
+    private fun showCover(book: Book, refreshBackground: Boolean = true) {
+        if (!refreshBackground) {
+            binding.ivCover.load(book, false)
+            return
+        }
         binding.ivCover.load(book, false) {
             if (!AppConfig.isEInkMode) {
                 BookCover.loadBlur(this, book.getDisplayCover(), false, book.origin)

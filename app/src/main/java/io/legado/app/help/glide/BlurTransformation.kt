@@ -9,10 +9,10 @@ import java.security.MessageDigest
 
 /**
  * 模糊
- * @radius: 0..25
+ * @radius: 0..50
  */
 class BlurTransformation(
-    @param:IntRange(from = 0, to = 25) private val radius: Int
+    @param:IntRange(from = 0, to = 50) private val radius: Int
 ) : BitmapTransformation() {
 
     override fun transform(
@@ -21,7 +21,15 @@ class BlurTransformation(
         outWidth: Int,
         outHeight: Int
     ): Bitmap {
-        return toTransform.stackBlur(radius)
+        var result = toTransform
+        var remaining = radius
+        while (remaining > 0) {
+            val input = result
+            result = input.stackBlur(remaining.coerceAtMost(25))
+            if (input !== toTransform) pool.put(input)
+            remaining -= 25
+        }
+        return result
     }
 
     override fun updateDiskCacheKey(messageDigest: MessageDigest) {

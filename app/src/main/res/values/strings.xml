@@ -913,7 +913,7 @@
     <string name="cover_config">cover config</string>
     <string name="cover_config_summary">Generic Cover Rules and Default Cover Style</string>
     <string name="blur_book_cover">Cover blur strength</string>
-    <string name="blur_book_cover_summary">0 disables blur; 25 is the strongest</string>
+    <string name="blur_book_cover_summary">0 disables blur; 50 is the strongest</string>
     <string name="blur_book_title">Book text blur strength</string>
     <string name="blur_book_title_summary">0 disables blur; 25 is the strongest</string>
     <string name="source_group_blur">Blur by source group</string>

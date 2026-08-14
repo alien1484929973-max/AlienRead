@@ -911,7 +911,7 @@
     <string name="cover_config">封面设置</string>
     <string name="cover_config_summary">通用封面规则及默认封面样式</string>
     <string name="blur_book_cover">封面模糊程度</string>
-    <string name="blur_book_cover_summary">0 为关闭，25 为最强</string>
+    <string name="blur_book_cover_summary">0 为关闭，50 为最强</string>
     <string name="blur_book_title">书籍文字模糊程度</string>
     <string name="blur_book_title_summary">0 为关闭，25 为最强</string>
     <string name="source_group_blur">按书源分组配置模糊</string>

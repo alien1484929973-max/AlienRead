@@ -207,7 +207,7 @@ class MainActivity : VMBaseActivity<ActivityMainBinding, MainViewModel>(),
         viewPagerMain.addOnPageChangeListener(PageChangeCallback())
         bottomNavigationView.setOnNavigationItemSelectedListener(this@MainActivity)
         bottomNavigationView.setOnNavigationItemReselectedListener(this@MainActivity)
-        fabPrivacyReveal.holdToRevealPrivacy {
+        fabPrivacyReveal.holdToRevealPrivacy("privacyReveal.bookshelf") {
             postEvent(EventBus.BOOKSHELF_REFRESH, "")
         }
         upPrivacyRevealButton()
