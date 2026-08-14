@@ -15,10 +15,9 @@ class WelcomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (intent.flags and Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT == 0) {
+            startActivity<MainActivity>()
             if (getPrefBoolean(PreferKey.defaultToRead) && appDb.bookDao.lastReadBook != null) {
                 startActivity<ReadBookActivity>()
-            } else {
-                startActivity<MainActivity>()
             }
         }
         finish()
