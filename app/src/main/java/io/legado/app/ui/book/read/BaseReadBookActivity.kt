@@ -270,6 +270,8 @@ abstract class BaseReadBookActivity :
                 val alertBinding = DialogDownloadChoiceBinding.inflate(layoutInflater).apply {
                     editStart.setText((book.durChapterIndex + 1).toString())
                     editEnd.setText(book.totalChapterNum.toString())
+                    editDelayMin.setText(AppConfig.chapterCacheDelayMin.toString())
+                    editDelayMax.setText(AppConfig.chapterCacheDelayMax.toString())
                 }
                 customView { alertBinding.root }
                 okButton {
@@ -280,6 +282,16 @@ abstract class BaseReadBookActivity :
                         val end = editEnd.text!!.toString().let {
                             if (it.isEmpty()) book.totalChapterNum else it.toInt()
                         }
+                        val delayMin = editDelayMin.text?.toString()
+                            ?.toIntOrNull()
+                            ?.coerceIn(0, 60)
+                            ?: 0
+                        val delayMax = editDelayMax.text?.toString()
+                            ?.toIntOrNull()
+                            ?.coerceIn(delayMin, 60)
+                            ?: delayMin
+                        AppConfig.chapterCacheDelayMin = delayMin
+                        AppConfig.chapterCacheDelayMax = delayMax
                         CacheBook.start(this@BaseReadBookActivity, book, start - 1, end - 1)
                     }
                 }

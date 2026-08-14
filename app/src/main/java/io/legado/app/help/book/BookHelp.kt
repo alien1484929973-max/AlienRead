@@ -12,7 +12,6 @@ import io.legado.app.data.entities.Book
 import io.legado.app.data.entities.BookChapter
 import io.legado.app.data.entities.BookSource
 import io.legado.app.help.config.AppConfig
-import io.legado.app.help.config.MangaDownloadRateLimiter
 import io.legado.app.model.analyzeRule.AnalyzeUrl
 import io.legado.app.model.localBook.LocalBook
 import io.legado.app.utils.ArchiveUtils
@@ -237,7 +236,6 @@ object BookHelp {
             val analyzeUrl = AnalyzeUrl(
                 src, source = bookSource, coroutineContext = currentCoroutineContext()
             )
-            if (book.isImage) MangaDownloadRateLimiter.await()
             val bytes = analyzeUrl.getByteArrayAwait()
             //某些图片被加密，需要进一步解密
             runScriptWithContext {

@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.core.view.get
+import androidx.core.view.isVisible
 import androidx.core.view.postDelayed
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -29,6 +30,8 @@ import io.legado.app.help.LifecycleHelp
 import io.legado.app.help.book.BookHelp
 import io.legado.app.help.config.AppConfig
 import io.legado.app.help.config.LocalConfig
+import io.legado.app.help.config.PrivacyBlurConfig
+import io.legado.app.help.config.holdToRevealPrivacy
 import io.legado.app.help.coroutine.Coroutine
 import io.legado.app.help.storage.Backup
 import io.legado.app.lib.dialogs.alert
@@ -49,6 +52,7 @@ import io.legado.app.ui.widget.text.BadgeView
 import io.legado.app.utils.isCreated
 import io.legado.app.utils.navigationBarHeight
 import io.legado.app.utils.observeEvent
+import io.legado.app.utils.postEvent
 import io.legado.app.utils.setEdgeEffectColor
 import io.legado.app.utils.setOnApplyWindowInsetsListenerCompat
 import io.legado.app.utils.showDialogFragment
@@ -203,6 +207,10 @@ class MainActivity : VMBaseActivity<ActivityMainBinding, MainViewModel>(),
         viewPagerMain.addOnPageChangeListener(PageChangeCallback())
         bottomNavigationView.setOnNavigationItemSelectedListener(this@MainActivity)
         bottomNavigationView.setOnNavigationItemReselectedListener(this@MainActivity)
+        fabPrivacyReveal.holdToRevealPrivacy {
+            postEvent(EventBus.BOOKSHELF_REFRESH, "")
+        }
+        upPrivacyRevealButton()
         if (AppConfig.isEInkMode) {
             bottomNavigationView.setBackgroundResource(R.drawable.bg_eink_border_top)
         }
@@ -440,6 +448,7 @@ class MainActivity : VMBaseActivity<ActivityMainBinding, MainViewModel>(),
         override fun onPageSelected(position: Int) {
             pagePosition = position
             binding.bottomNavigationView.menu[realPositions[position]].isChecked = true
+            upPrivacyRevealButton()
         }
 
     }
@@ -539,9 +548,21 @@ class MainActivity : VMBaseActivity<ActivityMainBinding, MainViewModel>(),
 
     override fun onResume() {
         super.onResume()
+        upPrivacyRevealButton()
         if (LifecycleHelp.activitySize() == 1) {
             readShibboleth(500)
         }
+    }
+
+    override fun onPause() {
+        if (PrivacyBlurConfig.setTemporarilyRevealed(false)) {
+            postEvent(EventBus.BOOKSHELF_REFRESH, "")
+        }
+        super.onPause()
+    }
+
+    private fun upPrivacyRevealButton() {
+        binding.fabPrivacyReveal.isVisible = pagePosition == 0 && PrivacyBlurConfig.hasAnyBlur
     }
 
 }

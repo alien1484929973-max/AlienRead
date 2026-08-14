@@ -11,7 +11,7 @@ import io.legado.app.base.adapter.ItemViewHolder
 import io.legado.app.data.entities.SearchBook
 import io.legado.app.databinding.ItemSearchBinding
 import io.legado.app.help.config.AppConfig
-import io.legado.app.help.config.setBookTitle
+import io.legado.app.help.config.setBookText
 import io.legado.app.utils.gone
 import io.legado.app.utils.visible
 
@@ -82,12 +82,15 @@ class SearchAdapter(context: Context, val callBack: CallBack) :
 
     private fun bind(binding: ItemSearchBinding, searchBook: SearchBook) {
         binding.run {
-            tvName.setBookTitle(searchBook.name, searchBook.origin)
-            tvAuthor.text = context.getString(R.string.author_show, searchBook.author)
+            tvName.setBookText(searchBook.name, searchBook.origin)
+            tvAuthor.setBookText(
+                context.getString(R.string.author_show, searchBook.author),
+                searchBook.origin
+            )
             ivInBookshelf.isVisible = callBack.isInBookshelf(searchBook)
             bvOriginCount.setBadgeCount(searchBook.origins.size)
-            upLasted(binding, searchBook.latestChapterTitle)
-            tvIntroduce.text = searchBook.trimIntro(context)
+            upLasted(binding, searchBook.latestChapterTitle, searchBook.origin)
+            tvIntroduce.setBookText(searchBook.trimIntro(context), searchBook.origin)
             upKind(binding, searchBook.getKindList())
             ivCover.load(
                 searchBook,
@@ -101,8 +104,15 @@ class SearchAdapter(context: Context, val callBack: CallBack) :
             bundle.keySet().forEach {
                 when (it) {
                     "origins" -> bvOriginCount.setBadgeCount(searchBook.origins.size)
-                    "last" -> upLasted(binding, searchBook.latestChapterTitle)
-                    "intro" -> tvIntroduce.text = searchBook.trimIntro(context)
+                    "last" -> upLasted(
+                        binding,
+                        searchBook.latestChapterTitle,
+                        searchBook.origin
+                    )
+                    "intro" -> tvIntroduce.setBookText(
+                        searchBook.trimIntro(context),
+                        searchBook.origin
+                    )
                     "kind" -> upKind(binding, searchBook.getKindList())
                     "isInBookshelf" -> ivInBookshelf.isVisible = callBack.isInBookshelf(searchBook)
                     "cover" -> ivCover.load(
@@ -114,13 +124,19 @@ class SearchAdapter(context: Context, val callBack: CallBack) :
         }
     }
 
-    private fun upLasted(binding: ItemSearchBinding, latestChapterTitle: String?) {
+    private fun upLasted(
+        binding: ItemSearchBinding,
+        latestChapterTitle: String?,
+        sourceOrigin: String?
+    ) {
         binding.run {
             if (latestChapterTitle.isNullOrEmpty()) {
                 tvLasted.gone()
             } else {
-                tvLasted.text =
-                    context.getString(R.string.lasted_show, latestChapterTitle)
+                tvLasted.setBookText(
+                    context.getString(R.string.lasted_show, latestChapterTitle),
+                    sourceOrigin
+                )
                 tvLasted.visible()
             }
         }

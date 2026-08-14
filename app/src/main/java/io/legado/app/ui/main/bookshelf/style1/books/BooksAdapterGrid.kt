@@ -10,7 +10,7 @@ import io.legado.app.databinding.ItemBookshelfGrid2Binding
 import io.legado.app.databinding.ItemBookshelfGridBinding
 import io.legado.app.help.book.isLocal
 import io.legado.app.help.config.AppConfig
-import io.legado.app.help.config.setBookTitle
+import io.legado.app.help.config.setBookText
 import io.legado.app.utils.gone
 import io.legado.app.utils.invisible
 import io.legado.app.utils.visible
@@ -37,7 +37,7 @@ class BooksAdapterGrid(context: Context, private val callBack: CallBack) :
                 if (payloads.isEmpty()) {
                     if (showBookname == 0) {
                         tvName.visible()
-                        tvName.setBookTitle(item.name, item.origin)
+                        tvName.setBookText(item.name, item.origin)
                     } else {
                         tvName.gone()
                     }
@@ -48,7 +48,7 @@ class BooksAdapterGrid(context: Context, private val callBack: CallBack) :
                         val bundle = payloads[i] as Bundle
                         bundle.keySet().forEach {
                             when (it) {
-                                "name" -> tvName.setBookTitle(item.name, item.origin)
+                                "name" -> tvName.setBookText(item.name, item.origin)
                                 "cover" -> ivCover.load(
                                     item,
                                     false
@@ -62,7 +62,7 @@ class BooksAdapterGrid(context: Context, private val callBack: CallBack) :
             }
             is ItemBookshelfGrid2Binding -> binding.run {
                 if (payloads.isEmpty()) {
-                    tvName.setBookTitle(item.name, item.origin)
+                    tvName.setBookText(item.name, item.origin)
                     ivCover.load(item, false)
                     upRefresh(binding, item)
                 } else {
@@ -70,7 +70,7 @@ class BooksAdapterGrid(context: Context, private val callBack: CallBack) :
                         val bundle = payloads[i] as Bundle
                         bundle.keySet().forEach {
                             when (it) {
-                                "name" -> tvName.setBookTitle(item.name, item.origin)
+                                "name" -> tvName.setBookText(item.name, item.origin)
                                 "cover" -> ivCover.load(
                                     item,
                                     false

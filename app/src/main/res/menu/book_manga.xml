@@ -31,11 +31,6 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/menu_manga_download_delay"
-        android:title="@string/manga_download_delay"
-        app:showAsAction="never" />
-
-    <item
         android:id="@+id/menu_disable_manga_scale"
         android:checkable="true"
         android:checked="false"

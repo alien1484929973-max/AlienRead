@@ -19,6 +19,7 @@ import android.widget.CheckBox
 import android.widget.LinearLayout
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
@@ -49,8 +50,10 @@ import io.legado.app.help.book.isVideo
 import io.legado.app.help.book.isWebFile
 import io.legado.app.help.book.removeType
 import io.legado.app.help.config.AppConfig
-import io.legado.app.help.config.setBookTitle
 import io.legado.app.help.config.LocalConfig
+import io.legado.app.help.config.PrivacyBlurConfig
+import io.legado.app.help.config.applyBookInfoBlur
+import io.legado.app.help.config.holdToRevealPrivacy
 import io.legado.app.help.webView.PooledWebView
 import io.legado.app.help.webView.WebJsExtensions
 import io.legado.app.help.webView.WebJsExtensions.Companion.getInjectionString
@@ -244,6 +247,9 @@ class BookInfoActivity :
         binding.vwBg.applyNavigationBarPadding()
         binding.tvShelf.setTextColor(getPrimaryTextColor(ColorUtils.isColorLight(bottomBackground)))
         binding.tvToc.text = getString(R.string.toc_s, getString(R.string.loading))
+        binding.fabPrivacyReveal.holdToRevealPrivacy {
+            viewModel.getBook()?.let(::upPrivacyBlur)
+        }
         viewModel.bookData.observe(this) { showBook(it) }
         viewModel.chapterListData.observe(this) { upLoading(false, it) }
         viewModel.waitDialogData.observe(this) { upWaitDialogStatus(it) }
@@ -483,8 +489,7 @@ class BookInfoActivity :
     }
 
     private fun showBook(book: Book) = binding.run {
-        showCover(book)
-        tvName.setBookTitle(book.name, book.origin)
+        tvName.text = book.name
         tvAuthor.text = getString(R.string.author_show, book.getRealAuthor())
         tvOrigin.text = getString(R.string.origin_show, book.originName)
         tvLasted.text = getString(R.string.lasted_show, book.latestChapterTitle)
@@ -499,6 +504,13 @@ class BookInfoActivity :
         upTvBookshelf()
         upKinds(book)
         upGroup(book.group)
+        upPrivacyBlur(book)
+    }
+
+    private fun upPrivacyBlur(book: Book) = binding.run {
+        fabPrivacyReveal.isVisible = PrivacyBlurConfig.hasBlur(book.origin)
+        llInfo.applyBookInfoBlur(book.origin)
+        showCover(book)
     }
 
     inner class CustomWebViewClient : WebViewClient() {
@@ -1158,6 +1170,9 @@ class BookInfoActivity :
      }
 
      override fun onStop() {
+         if (PrivacyBlurConfig.setTemporarilyRevealed(false)) {
+             viewModel.getBook()?.let(::upPrivacyBlur)
+         }
          super.onStop()
          if (initGetter) {
              glideImageGetter.stop()

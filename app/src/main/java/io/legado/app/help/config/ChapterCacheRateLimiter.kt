@@ -6,17 +6,16 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlin.random.Random
 
-object MangaDownloadRateLimiter {
+object ChapterCacheRateLimiter {
     private val mutex = Mutex()
     private var nextAllowedAt = 0L
 
     suspend fun await() {
-        val minSeconds = AppConfig.mangaDownloadDelayMin.coerceAtLeast(0)
-        val maxSeconds = AppConfig.mangaDownloadDelayMax.coerceAtLeast(minSeconds)
+        val minSeconds = AppConfig.chapterCacheDelayMin.coerceAtLeast(0)
+        val maxSeconds = AppConfig.chapterCacheDelayMax.coerceAtLeast(minSeconds)
         if (maxSeconds == 0) return
         mutex.withLock {
-            val now = SystemClock.elapsedRealtime()
-            val waitForPrevious = (nextAllowedAt - now).coerceAtLeast(0L)
+            val waitForPrevious = (nextAllowedAt - SystemClock.elapsedRealtime()).coerceAtLeast(0L)
             if (waitForPrevious > 0) delay(waitForPrevious)
             val randomSeconds = Random.nextInt(minSeconds, maxSeconds + 1)
             nextAllowedAt = SystemClock.elapsedRealtime() + randomSeconds * 1000L

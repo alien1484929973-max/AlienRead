@@ -79,8 +79,8 @@ object BackupConfig {
         PreferKey.clickActionBL,
         PreferKey.clickActionBC,
         PreferKey.clickActionBR,
-        PreferKey.mangaDownloadDelayMin,
-        PreferKey.mangaDownloadDelayMax
+        PreferKey.chapterCacheDelayMin,
+        PreferKey.chapterCacheDelayMax
     )
 
     private val themePrefKeys = arrayOf(

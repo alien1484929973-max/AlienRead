@@ -12,6 +12,7 @@ import io.legado.app.exception.ConcurrentException
 import io.legado.app.help.book.BookHelp
 import io.legado.app.help.book.isLocal
 import io.legado.app.help.config.AppConfig
+import io.legado.app.help.config.ChapterCacheRateLimiter
 import io.legado.app.help.coroutine.CompositeCoroutine
 import io.legado.app.help.coroutine.Coroutine
 import io.legado.app.model.webBook.WebBook
@@ -146,6 +147,7 @@ object CacheBook {
             postEvent(EventBus.UP_DOWNLOAD_STATE, "")
         }.onEachParallel(AppConfig.threadCount) {
             coroutineScope {
+                if (it.needsNetworkDownload()) ChapterCacheRateLimiter.await()
                 it.download(this, context)
             }
         }.onCompletion {
@@ -201,6 +203,15 @@ object CacheBook {
 
         val waitCount get() = waitDownloadSet.size
         val onDownloadCount get() = onDownloadSet.size
+
+        @Synchronized
+        fun needsNetworkDownload(): Boolean {
+            val index = waitDownloadSet.firstOrNull() ?: return false
+            val chapter = appDb.bookChapterDao.getChapter(book.bookUrl, index) ?: return false
+            return !chapter.isVolume &&
+                    !BookHelp.hasImageContent(book, chapter) &&
+                    !BookHelp.hasContent(book, chapter)
+        }
 
         init {
             postEvent(EventBus.UP_DOWNLOAD, book.bookUrl)

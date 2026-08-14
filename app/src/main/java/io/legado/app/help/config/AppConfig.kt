@@ -721,16 +721,16 @@ object AppConfig : SharedPreferences.OnSharedPreferenceChangeListener {
             appCtx.putPrefInt(PreferKey.mangaPreDownloadNum, value)
         }
 
-    var mangaDownloadDelayMin
-        get() = appCtx.getPrefInt(PreferKey.mangaDownloadDelayMin, 0)
+    var chapterCacheDelayMin
+        get() = appCtx.getPrefInt(PreferKey.chapterCacheDelayMin, 0)
         set(value) {
-            appCtx.putPrefInt(PreferKey.mangaDownloadDelayMin, value.coerceIn(0, 60))
+            appCtx.putPrefInt(PreferKey.chapterCacheDelayMin, value.coerceIn(0, 60))
         }
 
-    var mangaDownloadDelayMax
-        get() = appCtx.getPrefInt(PreferKey.mangaDownloadDelayMax, 0)
+    var chapterCacheDelayMax
+        get() = appCtx.getPrefInt(PreferKey.chapterCacheDelayMax, 0)
         set(value) {
-            appCtx.putPrefInt(PreferKey.mangaDownloadDelayMax, value.coerceIn(0, 60))
+            appCtx.putPrefInt(PreferKey.chapterCacheDelayMax, value.coerceIn(0, 60))
         }
 
     //点击翻页

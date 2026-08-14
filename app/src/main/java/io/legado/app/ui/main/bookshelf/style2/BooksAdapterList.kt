@@ -11,7 +11,7 @@ import io.legado.app.databinding.ItemBookshelfListBinding
 import io.legado.app.databinding.ItemBookshelfListGroupBinding
 import io.legado.app.help.book.isLocal
 import io.legado.app.help.config.AppConfig
-import io.legado.app.help.config.setBookTitle
+import io.legado.app.help.config.setBookText
 import io.legado.app.utils.gone
 import io.legado.app.utils.invisible
 import io.legado.app.utils.visible
@@ -59,10 +59,10 @@ class BooksAdapterList(context: Context, callBack: CallBack) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun onBind(item: Book, position: Int) = binding.run {
-            tvName.setBookTitle(item.name, item.origin)
-            tvAuthor.text = item.author
-            tvRead.text = item.durChapterTitle
-            tvLast.text = item.latestChapterTitle
+            tvName.setBookText(item.name, item.origin)
+            tvAuthor.setBookText(item.author, item.origin)
+            tvRead.setBookText(item.durChapterTitle, item.origin)
+            tvLast.setBookText(item.latestChapterTitle, item.origin)
             ivCover.load(item, false)
             flHasNew.visible()
             ivAuthor.visible()
@@ -79,10 +79,10 @@ class BooksAdapterList(context: Context, callBack: CallBack) :
                     val bundle = payloads[i] as Bundle
                     bundle.keySet().forEach {
                         when (it) {
-                            "name" -> tvName.setBookTitle(item.name, item.origin)
-                            "author" -> tvAuthor.text = item.author
-                            "dur" -> tvRead.text = item.durChapterTitle
-                            "last" -> tvLast.text = item.latestChapterTitle
+                            "name" -> tvName.setBookText(item.name, item.origin)
+                            "author" -> tvAuthor.setBookText(item.author, item.origin)
+                            "dur" -> tvRead.setBookText(item.durChapterTitle, item.origin)
+                            "last" -> tvLast.setBookText(item.latestChapterTitle, item.origin)
                             "cover" -> ivCover.load(
                                 item,
                                 false
@@ -128,10 +128,10 @@ class BooksAdapterList(context: Context, callBack: CallBack) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun onBind(item: Book, position: Int) = binding.run {
-            tvName.setBookTitle(item.name, item.origin)
-            tvAuthor.text = item.author
-            tvRead.text = item.durChapterTitle
-            tvLast.text = item.latestChapterTitle
+            tvName.setBookText(item.name, item.origin)
+            tvAuthor.setBookText(item.author, item.origin)
+            tvRead.setBookText(item.durChapterTitle, item.origin)
+            tvLast.setBookText(item.latestChapterTitle, item.origin)
             ivCover.load(item, false)
             flHasNew.visible()
             ivAuthor.visible()
@@ -147,10 +147,10 @@ class BooksAdapterList(context: Context, callBack: CallBack) :
                     val bundle = payloads[i] as Bundle
                     bundle.keySet().forEach {
                         when (it) {
-                            "name" -> tvName.setBookTitle(item.name, item.origin)
-                            "author" -> tvAuthor.text = item.author
-                            "dur" -> tvRead.text = item.durChapterTitle
-                            "last" -> tvLast.text = item.latestChapterTitle
+                            "name" -> tvName.setBookText(item.name, item.origin)
+                            "author" -> tvAuthor.setBookText(item.author, item.origin)
+                            "dur" -> tvRead.setBookText(item.durChapterTitle, item.origin)
+                            "last" -> tvLast.setBookText(item.latestChapterTitle, item.origin)
                             "cover" -> ivCover.load(
                                 item,
                                 false

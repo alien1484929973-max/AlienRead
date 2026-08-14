@@ -354,4 +354,19 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_privacy_reveal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="66dp"
+        android:contentDescription="@string/hold_to_reveal_privacy"
+        android:visibility="gone"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_visibility_off"
+        app:useCompatPadding="true"
+        tools:visibility="visible" />
 </androidx.constraintlayout.widget.ConstraintLayout>

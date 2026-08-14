@@ -10,7 +10,7 @@ import io.legado.app.base.adapter.RecyclerAdapter
 import io.legado.app.data.entities.SearchBook
 import io.legado.app.databinding.ItemSearchBinding
 import io.legado.app.help.config.AppConfig
-import io.legado.app.help.config.setBookTitle
+import io.legado.app.help.config.setBookText
 import io.legado.app.utils.gone
 import io.legado.app.utils.visible
 
@@ -41,16 +41,22 @@ class ExploreShowAdapter(context: Context, val callBack: CallBack) :
 
     private fun bind(binding: ItemSearchBinding, item: SearchBook) {
         binding.run {
-            tvName.setBookTitle(item.name, item.origin)
-            tvAuthor.text = context.getString(R.string.author_show, item.author)
+            tvName.setBookText(item.name, item.origin)
+            tvAuthor.setBookText(
+                context.getString(R.string.author_show, item.author),
+                item.origin
+            )
             ivInBookshelf.isVisible = callBack.isInBookshelf(item)
             if (item.latestChapterTitle.isNullOrEmpty()) {
                 tvLasted.gone()
             } else {
-                tvLasted.text = context.getString(R.string.lasted_show, item.latestChapterTitle)
+                tvLasted.setBookText(
+                    context.getString(R.string.lasted_show, item.latestChapterTitle),
+                    item.origin
+                )
                 tvLasted.visible()
             }
-            tvIntroduce.text = item.trimIntro(context)
+            tvIntroduce.setBookText(item.trimIntro(context), item.origin)
             val kinds = item.getKindList()
             if (kinds.isEmpty()) {
                 llKind.gone()

@@ -15,7 +15,6 @@ import io.legado.app.help.http.addHeaders
 import io.legado.app.help.http.okHttpClient
 import io.legado.app.help.http.okHttpClientManga
 import io.legado.app.help.source.SourceHelp
-import io.legado.app.help.config.MangaDownloadRateLimiter
 import io.legado.app.model.ReadManga
 import io.legado.app.model.analyzeRule.AnalyzeUrl
 import io.legado.app.utils.ImageUtils
@@ -23,8 +22,6 @@ import io.legado.app.utils.isWifiConnect
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
 import okhttp3.Call
 import okhttp3.Request
 import okhttp3.Response
@@ -81,16 +78,12 @@ class OkHttpStreamFetcher(
         requestBuilder.addHeaders(analyzedUrl.headers)
         val request: Request = requestBuilder.build()
         this.callback = callback
-        coroutineScope.launch {
-            if (manga) MangaDownloadRateLimiter.await()
-            if (!isActive) return@launch
-            call = if (manga) {
-                okHttpClientManga.newCall(request)
-            } else {
-                okHttpClient.newCall(request)
-            }
-            call?.enqueue(this@OkHttpStreamFetcher)
+        call = if (manga) {
+            okHttpClientManga.newCall(request)
+        } else {
+            okHttpClient.newCall(request)
         }
+        call?.enqueue(this)
     }
 
     override fun cleanup() {
