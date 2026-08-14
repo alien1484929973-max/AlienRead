@@ -25,6 +25,7 @@ import io.legado.app.lib.theme.primaryColor
 import io.legado.app.ui.book.group.GroupEditDialog
 import io.legado.app.ui.book.info.BookInfoActivity
 import io.legado.app.ui.book.search.SearchActivity
+import io.legado.app.ui.main.MainActivity
 import io.legado.app.ui.main.bookshelf.BaseBookshelfFragment
 import io.legado.app.utils.cnCompare
 import io.legado.app.utils.flowWithLifecycleAndDatabaseChangeFirst
@@ -225,6 +226,7 @@ class BookshelfFragment2() : BaseBookshelfFragment(R.layout.fragment_bookshelf2)
         if (groupId != BookGroup.IdRoot) {
             groupId = BookGroup.IdRoot
             initBooksData()
+            (activity as? MainActivity)?.updateBackCallback()
             return true
         }
         return false
@@ -254,6 +256,7 @@ class BookshelfFragment2() : BaseBookshelfFragment(R.layout.fragment_bookshelf2)
             is BookGroup -> {
                 groupId = item.groupId
                 initBooksData()
+                (activity as? MainActivity)?.updateBackCallback()
             }
         }
     }

@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.text.format.DateUtils
 import android.view.MenuItem
 import android.view.ViewGroup
-import androidx.activity.addCallback
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.core.view.get
 import androidx.core.view.isVisible
@@ -36,7 +36,7 @@ import io.legado.app.help.coroutine.Coroutine
 import io.legado.app.help.storage.Backup
 import io.legado.app.lib.dialogs.alert
 import io.legado.app.lib.theme.primaryColor
-import io.legado.app.service.BaseReadAloudService
+import io.legado.app.data.entities.BookGroup
 import io.legado.app.ui.about.CrashLogsDialog
 import io.legado.app.ui.association.ImportBookSourceDialog
 import io.legado.app.ui.association.ImportReplaceRuleDialog
@@ -49,12 +49,11 @@ import io.legado.app.ui.main.my.MyFragment
 import io.legado.app.ui.main.rss.RssFragment
 import io.legado.app.ui.widget.dialog.TextDialog
 import io.legado.app.ui.widget.text.BadgeView
+import io.legado.app.utils.hideImmersiveSystemBars
 import io.legado.app.utils.isCreated
-import io.legado.app.utils.navigationBarHeight
 import io.legado.app.utils.observeEvent
 import io.legado.app.utils.postEvent
 import io.legado.app.utils.setEdgeEffectColor
-import io.legado.app.utils.setOnApplyWindowInsetsListenerCompat
 import io.legado.app.utils.showDialogFragment
 import io.legado.app.utils.toastOnUi
 import io.legado.app.utils.viewbindingdelegate.viewBinding
@@ -62,7 +61,6 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
-import splitties.views.bottomPadding
 import kotlin.coroutines.resume
 import io.legado.app.help.update.AppUpdate
 import io.legado.app.ui.about.UpdateDialog
@@ -91,44 +89,40 @@ class MainActivity : VMBaseActivity<ActivityMainBinding, MainViewModel>(),
     private val idExplore = 1
     private val idRss = 2
     private val idMy = 3
-    private var exitTime: Long = 0
     private var bookshelfReselected: Long = 0
     private var exploreReselected: Long = 0
     private var pagePosition = 0
     private val fragmentMap = hashMapOf<Int, Fragment>()
     private var bottomMenuCount = 4
-    private val EXIT_INTERVAL = 2000L
     private val realPositions = arrayOf(idBookshelf, idExplore, idRss, idMy)
     private val adapter by lazy {
         TabFragmentPageAdapter(supportFragmentManager)
     }
     private var onUpBooksBadgeView: BadgeView? = null
+    private lateinit var mainBackCallback: OnBackPressedCallback
+
+    override fun setupSystemBar() {
+        super.setupSystemBar()
+        hideImmersiveSystemBars()
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         upBottomMenu()
         initView()
         upHomePage()
-        onBackPressedDispatcher.addCallback(this) {
-            if (pagePosition != 0) {
-                binding.viewPagerMain.currentItem = 0
-                return@addCallback
-            }
-            (fragmentMap[getFragmentId(0)] as? BookshelfFragment2)?.let {
-                if (it.back()) {
-                    return@addCallback
+        mainBackCallback = object : OnBackPressedCallback(false) {
+            override fun handleOnBackPressed() {
+                if (pagePosition != 0) {
+                    binding.viewPagerMain.currentItem = 0
+                } else if ((fragmentMap[getFragmentId(0)] as? BookshelfFragment2)?.back() != true) {
+                    isEnabled = false
+                    onBackPressedDispatcher.onBackPressed()
                 }
-            }
-            if (System.currentTimeMillis() - exitTime > EXIT_INTERVAL) {
-                toastOnUi(R.string.double_click_exit)
-                exitTime = System.currentTimeMillis()
-            } else {
-                if (BaseReadAloudService.pause) {
-                    finish()
-                } else {
-                    moveTaskToBack(true)
-                }
+                updateBackCallback()
             }
         }
+        onBackPressedDispatcher.addCallback(this, mainBackCallback)
+        updateBackCallback()
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -213,11 +207,6 @@ class MainActivity : VMBaseActivity<ActivityMainBinding, MainViewModel>(),
         upPrivacyRevealButton()
         if (AppConfig.isEInkMode) {
             bottomNavigationView.setBackgroundResource(R.drawable.bg_eink_border_top)
-        }
-        bottomNavigationView.setOnApplyWindowInsetsListenerCompat { view, windowInsets ->
-            val height = windowInsets.navigationBarHeight
-            view.bottomPadding = height
-            windowInsets.inset(0, 0, 0, height)
         }
     }
 
@@ -449,6 +438,7 @@ class MainActivity : VMBaseActivity<ActivityMainBinding, MainViewModel>(),
             pagePosition = position
             binding.bottomNavigationView.menu[realPositions[position]].isChecked = true
             upPrivacyRevealButton()
+            updateBackCallback()
         }
 
     }
@@ -563,6 +553,14 @@ class MainActivity : VMBaseActivity<ActivityMainBinding, MainViewModel>(),
 
     private fun upPrivacyRevealButton() {
         binding.fabPrivacyReveal.isVisible = pagePosition == 0 && PrivacyBlurConfig.hasAnyBlur
+    }
+
+    internal fun updateBackCallback() {
+        if (::mainBackCallback.isInitialized) {
+            val bookshelf = fragmentMap[getFragmentId(0)] as? BookshelfFragment2
+            mainBackCallback.isEnabled =
+                pagePosition != 0 || bookshelf?.groupId?.let { it != BookGroup.IdRoot } == true
+        }
     }
 
 }

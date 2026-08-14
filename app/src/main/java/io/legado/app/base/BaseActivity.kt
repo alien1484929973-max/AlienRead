@@ -11,7 +11,6 @@ import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import android.widget.FrameLayout
-import androidx.activity.addCallback
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
@@ -86,9 +85,6 @@ abstract class BaseActivity<VB : ViewBinding>(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             findViewById<TitleBar>(R.id.title_bar)
                 ?.onMultiWindowModeChanged(isInMultiWindowMode, fullScreen)
-        }
-        onBackPressedDispatcher.addCallback(this) {
-            finish()
         }
         observeLiveBus()
         onActivityCreated(savedInstanceState)

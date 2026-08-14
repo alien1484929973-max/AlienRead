@@ -10,8 +10,6 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
-import android.view.WindowInsets
-import android.view.WindowInsetsController
 import io.legado.app.ui.widget.text.ScrollTextView
 import android.view.textclassifier.TextClassifier
 import android.webkit.WebResourceRequest
@@ -96,9 +94,9 @@ import io.legado.app.utils.ConvertUtils
 import io.legado.app.utils.FileDoc
 import io.legado.app.utils.GSON
 import io.legado.app.utils.StartActivityContract
-import io.legado.app.utils.applyNavigationBarPadding
 import io.legado.app.utils.dpToPx
 import io.legado.app.utils.gone
+import io.legado.app.utils.hideImmersiveSystemBars
 import io.legado.app.utils.longSnackbar
 import io.legado.app.utils.longToastOnUi
 import io.legado.app.utils.observeEvent
@@ -240,13 +238,7 @@ class BookInfoActivity :
 
     override fun setupSystemBar() {
         super.setupSystemBar()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.insetsController?.apply {
-                hide(WindowInsets.Type.navigationBars())
-                systemBarsBehavior =
-                    WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-            }
-        }
+        hideImmersiveSystemBars()
     }
 
     @SuppressLint("PrivateResource")
@@ -257,7 +249,6 @@ class BookInfoActivity :
         binding.llInfo.setBackgroundColor(backgroundColor)
         binding.ivCoverC.setCardBackgroundColor(backgroundColor)
         binding.flAction.setBackgroundColor(bottomBackground)
-        binding.flAction.applyNavigationBarPadding()
         binding.tvShelf.setTextColor(getPrimaryTextColor(ColorUtils.isColorLight(bottomBackground)))
         binding.tvToc.text = getString(R.string.toc_s, getString(R.string.loading))
         binding.fabPrivacyReveal.holdToRevealPrivacy("privacyReveal.bookInfo") {

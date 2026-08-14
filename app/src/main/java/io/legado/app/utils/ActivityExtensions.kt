@@ -197,6 +197,21 @@ fun Activity.toggleSystemBar(show: Boolean) {
     }
 }
 
+/** Fullscreen bars that overlay the content instead of resizing it. */
+@Suppress("DEPRECATION")
+fun Activity.hideImmersiveSystemBars() {
+    WindowCompat.setDecorFitsSystemWindows(window, false)
+    window.statusBarColor = Color.TRANSPARENT
+    window.navigationBarColor = Color.TRANSPARENT
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        window.isNavigationBarContrastEnforced = false
+    }
+    WindowCompat.getInsetsController(window, window.decorView).run {
+        systemBarsBehavior = BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        hide(WindowInsetsCompat.Type.systemBars())
+    }
+}
+
 /////以下方法需要在View完全被绘制出来之后调用，否则判断不了,在比如 onWindowFocusChanged（）方法中可以得到正确的结果/////
 
 /**
