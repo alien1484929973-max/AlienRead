@@ -920,7 +920,8 @@
     <string name="group_title_blur_value">书籍文字模糊：%d</string>
     <string name="delete_group_blur_rule">删除此分组配置</string>
     <string name="no_source_group">当前没有可配置的书源分组</string>
-    <string name="hold_to_reveal_privacy">按住显示隐私内容</string>
+    <string name="show_privacy">显示隐私内容</string>
+    <string name="hide_privacy">隐藏隐私内容</string>
     <string name="chapter_cache_interval">随机间隔（秒）</string>
     <string name="chapter_cache_interval_summary">0-0 为正常速度，可配置 0-60 秒</string>
     <string name="minimum">最小</string>

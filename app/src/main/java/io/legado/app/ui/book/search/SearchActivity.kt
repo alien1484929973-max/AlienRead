@@ -29,6 +29,9 @@ import io.legado.app.data.entities.BookSourcePart
 import io.legado.app.data.entities.SearchBook
 import io.legado.app.data.entities.SearchKeyword
 import io.legado.app.databinding.ActivityBookSearchBinding
+import io.legado.app.help.config.PrivacyBlurConfig
+import io.legado.app.help.config.togglePrivacyReveal
+import io.legado.app.help.config.updatePrivacyRevealState
 import io.legado.app.lib.dialogs.alert
 import io.legado.app.lib.theme.Selector
 import io.legado.app.lib.theme.accentColor
@@ -286,6 +289,11 @@ class SearchActivity : VMBaseActivity<ActivityBookSearchBinding, SearchViewModel
             }
         }
         binding.fbStartStop.applyNavigationBarMargin(true)
+        binding.fabPrivacyReveal.togglePrivacyReveal("privacyReveal.search") {
+            if (adapter.itemCount > 0) {
+                adapter.notifyItemRangeChanged(0, adapter.itemCount)
+            }
+        }
         binding.tvClearHistory.setOnClickListener { alertClearHistory() }
     }
 
@@ -306,6 +314,7 @@ class SearchActivity : VMBaseActivity<ActivityBookSearchBinding, SearchViewModel
         }
         viewModel.searchBookLiveData.observe(this) {
             adapter.setItems(it)
+            upPrivacyRevealButton(it)
         }
         lifecycleScope.launch {
             appDb.bookSourceDao.flowEnabledGroups().collect {
@@ -537,6 +546,22 @@ class SearchActivity : VMBaseActivity<ActivityBookSearchBinding, SearchViewModel
             return
         }
         super.finish()
+    }
+
+    override fun onStop() {
+        if (PrivacyBlurConfig.setTemporarilyRevealed(false)) {
+            if (adapter.itemCount > 0) {
+                adapter.notifyItemRangeChanged(0, adapter.itemCount)
+            }
+        }
+        binding.fabPrivacyReveal.updatePrivacyRevealState()
+        super.onStop()
+    }
+
+    private fun upPrivacyRevealButton(items: List<SearchBook> = adapter.getItems()) {
+        binding.fabPrivacyReveal.isVisible = items.any {
+            PrivacyBlurConfig.hasBlur(it.origin)
+        }
     }
 
     companion object {

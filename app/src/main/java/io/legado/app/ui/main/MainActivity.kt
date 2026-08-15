@@ -31,7 +31,8 @@ import io.legado.app.help.book.BookHelp
 import io.legado.app.help.config.AppConfig
 import io.legado.app.help.config.LocalConfig
 import io.legado.app.help.config.PrivacyBlurConfig
-import io.legado.app.help.config.holdToRevealPrivacy
+import io.legado.app.help.config.togglePrivacyReveal
+import io.legado.app.help.config.updatePrivacyRevealState
 import io.legado.app.help.coroutine.Coroutine
 import io.legado.app.help.storage.Backup
 import io.legado.app.lib.dialogs.alert
@@ -201,7 +202,7 @@ class MainActivity : VMBaseActivity<ActivityMainBinding, MainViewModel>(),
         viewPagerMain.addOnPageChangeListener(PageChangeCallback())
         bottomNavigationView.setOnNavigationItemSelectedListener(this@MainActivity)
         bottomNavigationView.setOnNavigationItemReselectedListener(this@MainActivity)
-        fabPrivacyReveal.holdToRevealPrivacy("privacyReveal.bookshelf") {
+        fabPrivacyReveal.togglePrivacyReveal("privacyReveal.bookshelf") {
             postEvent(EventBus.BOOKSHELF_REFRESH, "")
         }
         upPrivacyRevealButton()
@@ -548,6 +549,7 @@ class MainActivity : VMBaseActivity<ActivityMainBinding, MainViewModel>(),
         if (PrivacyBlurConfig.setTemporarilyRevealed(false)) {
             postEvent(EventBus.BOOKSHELF_REFRESH, "")
         }
+        binding.fabPrivacyReveal.updatePrivacyRevealState()
         super.onPause()
     }
 

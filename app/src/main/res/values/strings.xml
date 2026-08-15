@@ -922,7 +922,8 @@
     <string name="group_title_blur_value">Book text blur: %d</string>
     <string name="delete_group_blur_rule">Delete this group rule</string>
     <string name="no_source_group">No source groups are available</string>
-    <string name="hold_to_reveal_privacy">Hold to reveal private content</string>
+    <string name="show_privacy">Show private content</string>
+    <string name="hide_privacy">Hide private content</string>
     <string name="chapter_cache_interval">Random interval (seconds)</string>
     <string name="chapter_cache_interval_summary">0-0 uses normal speed; configurable from 0 to 60 seconds</string>
     <string name="minimum">Minimum</string>

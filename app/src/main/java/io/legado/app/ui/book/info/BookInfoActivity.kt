@@ -53,7 +53,8 @@ import io.legado.app.help.config.AppConfig
 import io.legado.app.help.config.LocalConfig
 import io.legado.app.help.config.PrivacyBlurConfig
 import io.legado.app.help.config.applyBookInfoBlur
-import io.legado.app.help.config.holdToRevealPrivacy
+import io.legado.app.help.config.togglePrivacyReveal
+import io.legado.app.help.config.updatePrivacyRevealState
 import io.legado.app.help.webView.PooledWebView
 import io.legado.app.help.webView.WebJsExtensions
 import io.legado.app.help.webView.WebJsExtensions.Companion.getInjectionString
@@ -251,7 +252,7 @@ class BookInfoActivity :
         binding.flAction.setBackgroundColor(bottomBackground)
         binding.tvShelf.setTextColor(getPrimaryTextColor(ColorUtils.isColorLight(bottomBackground)))
         binding.tvToc.text = getString(R.string.toc_s, getString(R.string.loading))
-        binding.fabPrivacyReveal.holdToRevealPrivacy("privacyReveal.bookInfo") {
+        binding.fabPrivacyReveal.togglePrivacyReveal("privacyReveal.bookInfo") {
             viewModel.getBook()?.let(::upPrivacyBlur)
         }
         viewModel.bookData.observe(this) { showBook(it) }
@@ -1182,6 +1183,7 @@ class BookInfoActivity :
          if (PrivacyBlurConfig.setTemporarilyRevealed(false)) {
              viewModel.getBook()?.let(::upPrivacyBlur)
          }
+         binding.fabPrivacyReveal.updatePrivacyRevealState()
          super.onStop()
          if (initGetter) {
              glideImageGetter.stop()

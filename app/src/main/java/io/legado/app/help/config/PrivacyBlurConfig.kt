@@ -48,6 +48,9 @@ object PrivacyBlurConfig {
     @Volatile
     private var temporarilyRevealed = false
 
+    val isTemporarilyRevealed: Boolean
+        get() = temporarilyRevealed
+
     val globalCoverRadius: Int
         get() {
             val prefs = appCtx.defaultSharedPreferences
@@ -82,6 +85,10 @@ object PrivacyBlurConfig {
         if (temporarilyRevealed == value) return false
         temporarilyRevealed = value
         return true
+    }
+
+    fun toggleTemporarilyRevealed() {
+        temporarilyRevealed = !temporarilyRevealed
     }
 
     fun getGroupRule(group: String): Rule? = groupRules[group]
@@ -211,13 +218,14 @@ private fun View.applyPrivacyBlurRecursively(radius: Int) {
     }
 }
 
-fun View.holdToRevealPrivacy(positionKey: String, onChanged: () -> Unit) {
+fun View.togglePrivacyReveal(positionKey: String, onChanged: () -> Unit) {
     (this as? FloatingActionButton)?.apply {
         setCustomSize(36.dpToPx())
         setMaxImageSize(16.dpToPx())
         backgroundTintList = ColorStateList.valueOf(context.accentColor)
         alpha = 0.72f
     }
+    updatePrivacyRevealState()
     restorePrivacyPosition(positionKey)
     addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
         restorePrivacyPosition(positionKey)
@@ -237,7 +245,6 @@ fun View.holdToRevealPrivacy(positionKey: String, onChanged: () -> Unit) {
                 startY = view.y
                 dragging = false
                 view.postDelayed(startDragging, ViewConfiguration.getLongPressTimeout().toLong())
-                if (PrivacyBlurConfig.setTemporarilyRevealed(true)) onChanged()
                 true
             }
 
@@ -260,8 +267,12 @@ fun View.holdToRevealPrivacy(positionKey: String, onChanged: () -> Unit) {
             MotionEvent.ACTION_OUTSIDE -> {
                 view.removeCallbacks(startDragging)
                 if (dragging) view.savePrivacyPosition(positionKey)
-                if (PrivacyBlurConfig.setTemporarilyRevealed(false)) onChanged()
-                if (event.actionMasked == MotionEvent.ACTION_UP && !dragging) view.performClick()
+                if (event.actionMasked == MotionEvent.ACTION_UP && !dragging) {
+                    PrivacyBlurConfig.toggleTemporarilyRevealed()
+                    view.updatePrivacyRevealState()
+                    onChanged()
+                    view.performClick()
+                }
                 dragging = false
                 true
             }
@@ -269,6 +280,23 @@ fun View.holdToRevealPrivacy(positionKey: String, onChanged: () -> Unit) {
             else -> true
         }
     }
+}
+
+fun View.updatePrivacyRevealState() {
+    (this as? ImageView)?.setImageResource(
+        if (PrivacyBlurConfig.isTemporarilyRevealed) {
+            R.drawable.ic_visibility
+        } else {
+            R.drawable.ic_visibility_off
+        }
+    )
+    contentDescription = context.getString(
+        if (PrivacyBlurConfig.isTemporarilyRevealed) {
+            R.string.hide_privacy
+        } else {
+            R.string.show_privacy
+        }
+    )
 }
 
 private fun View.restorePrivacyPosition(positionKey: String) {

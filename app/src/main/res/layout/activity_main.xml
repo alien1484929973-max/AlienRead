@@ -36,7 +36,7 @@
         android:layout_gravity="end|bottom"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="72dp"
-        android:contentDescription="@string/hold_to_reveal_privacy"
+        android:contentDescription="@string/show_privacy"
         android:visibility="gone"
         app:fabSize="mini"
         app:srcCompat="@drawable/ic_visibility_off"
